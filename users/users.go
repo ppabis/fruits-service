@@ -17,12 +17,36 @@ func newCookie(username string) string {
 }
 
 func ensureUsersTable(db *sql.DB) bool {
-	_, err := db.Exec("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, password TEXT)")
+	_, err := db.Exec("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, password TEXT, super INTEGER DEFAULT 0)")
 	if err != nil {
 		return false
 	}
 
 	return true
+}
+
+func IsUserSuper(id int) bool {
+	// Checks if user is super
+	db, err := sql.Open("sqlite3", "monolith.db")
+	defer db.Close()
+	if err != nil {
+		return false
+	}
+	if !ensureUsersTable(db) {
+		return false
+	}
+	rows, err := db.Query("SELECT super FROM users WHERE id = ?", id)
+	if err != nil {
+		return false
+	}
+	rows.Next()
+	var super int
+	err = rows.Scan(&super)
+	if err != nil {
+		return false
+	}
+
+	return super > 0
 }
 
 func hashPassword(password string) string {

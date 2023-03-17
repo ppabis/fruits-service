@@ -85,3 +85,28 @@ func TestUsernameSingularity(t *testing.T) {
 		t.Error("Expected error")
 	}
 }
+
+func TestUserSuper(t *testing.T) {
+	defer os.Remove("monolith.db")
+	err := CreateUser("foo", "barbarbar")
+	if err != nil {
+		t.Error(err)
+	}
+	err = UpdateUserSuperStatus(1, 1)
+	if err != nil {
+		t.Error(err)
+	}
+	super := IsUserSuper(1)
+	if !super {
+		t.Error("Expected user to be super")
+	}
+
+	err = UpdateUserSuperStatus(1, 0)
+	if err != nil {
+		t.Error(err)
+	}
+	super = IsUserSuper(1)
+	if super {
+		t.Error("Expected user to be not super")
+	}
+}
