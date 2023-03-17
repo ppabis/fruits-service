@@ -38,3 +38,10 @@ func Authenticate(username, password string) (string, error) {
 
 	return cookie, nil
 }
+
+func GetByCookie(cookie string) (int, error) {
+	if id, ok := sessions[cookie]; ok {
+		return id, nil
+	}
+	return 0, fmt.Errorf("Invalid cookie")
+}

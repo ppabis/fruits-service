@@ -62,7 +62,12 @@ func TestAuthenticateSuccess(t *testing.T) {
 	defer os.Remove("monolith.db")
 	CreateUser("foo", "barbarbar")
 
-	_, err := Authenticate("foo", "barbarbar")
+	cookie, err := Authenticate("foo", "barbarbar")
+	if err != nil {
+		t.Error(err)
+	}
+
+	_, err = GetByCookie(cookie)
 	if err != nil {
 		t.Error(err)
 	}
