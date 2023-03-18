@@ -42,10 +42,9 @@ func Authenticate(username, password string) (string, error) {
 	return cookie, nil
 }
 
-func Logout(cookie string) error {
+func Logout(cookie string) {
 	// Logs out user
 	delete(sessions, cookie)
-	return nil
 }
 
 func GetByCookie(cookie string) (int, error) {

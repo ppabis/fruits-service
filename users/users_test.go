@@ -127,7 +127,7 @@ func TestLogout(t *testing.T) {
 		t.Error(err)
 	}
 
-	err = Logout(cookie)
+	Logout(cookie)
 	if err != nil {
 		t.Error(err)
 	}
