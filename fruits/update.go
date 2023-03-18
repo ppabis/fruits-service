@@ -27,17 +27,17 @@ func hasCurrent(db *sql.DB, id int) (bool, error) {
 func UpdateFruit(id int, name string) error {
 	// Updates a fruit
 	db, err := sql.Open("sqlite3", "monolith.db")
-	defer db.Close()
 	if err != nil {
 		return err
 	}
+	defer db.Close()
 
 	if !ensureFruitsTable(db) {
-		return fmt.Errorf("Failed to ensure fruits table")
+		return fmt.Errorf("failed to ensure fruits table")
 	}
 
 	if isFruitSpecial(name) && !users.IsUserSuper(id) {
-		return fmt.Errorf("You are not allowed to have this fruit")
+		return fmt.Errorf("you are not allowed to have this fruit")
 	}
 
 	do_update, err := hasCurrent(db, id)
@@ -46,9 +46,9 @@ func UpdateFruit(id int, name string) error {
 	}
 
 	if do_update {
-		_, err = db.Exec("UPDATE fruits SET name = ? WHERE user = ?", name, id)
+		_, err = db.Exec("UPDATE fruits SET fruit = ? WHERE user = ?", name, id)
 	} else {
-		_, err = db.Exec("INSERT INTO fruits (user, name) VALUES (?, ?)", id, name)
+		_, err = db.Exec("INSERT INTO fruits (user, fruit) VALUES (?, ?)", id, name)
 	}
 
 	return err
