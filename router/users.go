@@ -22,6 +22,12 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if r.ParseForm() != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte("invalid form"))
+		return
+	}
+
 	username := r.Form.Get("username")
 	password := r.Form.Get("password")
 

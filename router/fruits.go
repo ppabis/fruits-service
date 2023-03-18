@@ -39,6 +39,12 @@ func SetFruit(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if r.ParseForm() != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte("invalid form"))
+		return
+	}
+
 	fruit := r.Form.Get("fruit")
 
 	err := fruits.UpdateFruit(id, fruit)
