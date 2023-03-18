@@ -22,6 +22,7 @@ func GetFruits() (map[string]string, error) {
 	if err != nil {
 		return nil, err
 	}
+	defer rows.Close()
 
 	fruits := make(map[string]string)
 	for rows.Next() {
