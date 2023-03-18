@@ -110,3 +110,30 @@ func TestUserSuper(t *testing.T) {
 		t.Error("Expected user to be not super")
 	}
 }
+
+func TestLogout(t *testing.T) {
+	defer os.Remove("monolith.db")
+	err := CreateUser("foo", "barbarbar")
+	if err != nil {
+		t.Error(err)
+	}
+	cookie, err := Authenticate("foo", "barbarbar")
+	if err != nil {
+		t.Error(err)
+	}
+
+	_, err = GetByCookie(cookie)
+	if err != nil {
+		t.Error(err)
+	}
+
+	err = Logout(cookie)
+	if err != nil {
+		t.Error(err)
+	}
+
+	_, err = GetByCookie(cookie)
+	if err == nil {
+		t.Error("Expected error")
+	}
+}

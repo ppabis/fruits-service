@@ -42,6 +42,12 @@ func Authenticate(username, password string) (string, error) {
 	return cookie, nil
 }
 
+func Logout(cookie string) error {
+	// Logs out user
+	delete(sessions, cookie)
+	return nil
+}
+
 func GetByCookie(cookie string) (int, error) {
 	if id, ok := sessions[cookie]; ok {
 		return id, nil
