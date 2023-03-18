@@ -46,4 +46,6 @@ func main() {
 		}
 		return
 	}
+
+	flag.PrintDefaults()
 }
