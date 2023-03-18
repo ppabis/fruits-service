@@ -33,10 +33,13 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	w.WriteHeader(http.StatusOK)
 	http.SetCookie(w, &http.Cookie{
 		Name:  "session",
 		Value: cookie,
 	})
+	w.Header().Add("Location", "/")
+
 }
 
 func LogoutUser(w http.ResponseWriter, r *http.Request) {
