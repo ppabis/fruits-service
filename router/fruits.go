@@ -5,7 +5,7 @@ import (
 	"net/http"
 )
 
-func ListAllFruits(r *http.Request, w http.ResponseWriter) {
+func ListAllFruits(w http.ResponseWriter, r *http.Request) {
 	// Lists all fruits
 	// path = GET /
 	fruits, err := fruits.GetFruits()
@@ -23,9 +23,15 @@ func ListAllFruits(r *http.Request, w http.ResponseWriter) {
 
 }
 
-func SetFruit(r *http.Request, w http.ResponseWriter) {
+func SetFruit(w http.ResponseWriter, r *http.Request) {
 	// Sets a fruit
 	// path = PUT /fruit
+	if r.Method != "PUT" {
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		w.Write([]byte("only PUT is allowed"))
+		return
+	}
+
 	id := activateSession(r)
 	if id == 0 {
 		w.WriteHeader(http.StatusUnauthorized)

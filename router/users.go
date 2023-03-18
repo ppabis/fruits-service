@@ -5,10 +5,16 @@ import (
 	"net/http"
 )
 
-func LoginUser(r *http.Request, w http.ResponseWriter) {
+func LoginUser(w http.ResponseWriter, r *http.Request) {
 	// Logs in a user
 	// Path = POST /login
 	id := activateSession(r)
+
+	if r.Method != "POST" {
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		w.Write([]byte("only POST is allowed"))
+		return
+	}
 
 	if id != 0 {
 		w.WriteHeader(http.StatusBadRequest)
@@ -33,9 +39,15 @@ func LoginUser(r *http.Request, w http.ResponseWriter) {
 	})
 }
 
-func LogoutUser(r *http.Request, w http.ResponseWriter) {
+func LogoutUser(w http.ResponseWriter, r *http.Request) {
 	// Logs out a user
 	// Path = GET /logout
+	if r.Method != "GET" {
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		w.Write([]byte("only GET is allowed"))
+		return
+	}
+
 	cookie, err := r.Cookie("session")
 	if err != nil {
 		w.WriteHeader(http.StatusUnauthorized)
