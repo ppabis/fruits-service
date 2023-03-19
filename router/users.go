@@ -39,12 +39,12 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Add("Location", "/")
 	http.SetCookie(w, &http.Cookie{
 		Name:  "session",
 		Value: cookie,
 	})
-	w.WriteHeader(http.StatusOK)
+	w.Header().Add("Location", "/")
+	w.WriteHeader(http.StatusFound)
 	w.Write([]byte("logged in"))
 
 }
@@ -73,7 +73,7 @@ func LogoutUser(w http.ResponseWriter, r *http.Request) {
 		MaxAge: -1,
 	})
 	w.Header().Add("Location", "/")
-	w.WriteHeader(http.StatusOK)
+	w.WriteHeader(http.StatusFound)
 }
 
 func activateSession(r *http.Request) int {
