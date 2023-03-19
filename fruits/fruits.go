@@ -23,5 +23,6 @@ func hasCurrent(db *sql.DB, id int) (bool, error) {
 	if err != nil {
 		return false, err
 	}
+	defer rows.Close()
 	return rows.Next(), nil
 }
