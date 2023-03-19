@@ -3,12 +3,14 @@ package users
 import (
 	"database/sql"
 	"fmt"
+	"monolith/config"
+
 	_ "github.com/mattn/go-sqlite3"
 )
 
 func UpdateUserSuperStatus(id int, super int) error {
 	// Updates user super status
-	db, err := sql.Open("sqlite3", "monolith.db")
+	db, err := sql.Open("sqlite3", config.DbFile)
 	if err != nil {
 		return err
 	}

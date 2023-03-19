@@ -3,13 +3,14 @@ package users
 import (
 	"database/sql"
 	"fmt"
+	"monolith/config"
 )
 
 var sessions map[string]int = make(map[string]int)
 
 func Authenticate(username, password string) (string, error) {
 	// Authenticates user and returns a session cookie
-	db, err := sql.Open("sqlite3", "monolith.db")
+	db, err := sql.Open("sqlite3", config.DbFile)
 	if err != nil {
 		return "", err
 	}

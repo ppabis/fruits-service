@@ -3,6 +3,7 @@ package fruits
 import (
 	"database/sql"
 	"fmt"
+	"monolith/config"
 	"monolith/users"
 	"strings"
 
@@ -26,7 +27,7 @@ func hasCurrent(db *sql.DB, id int) (bool, error) {
 
 func UpdateFruit(id int, name string) error {
 	// Updates a fruit
-	db, err := sql.Open("sqlite3", "monolith.db")
+	db, err := sql.Open("sqlite3", config.DbFile)
 	if err != nil {
 		return err
 	}

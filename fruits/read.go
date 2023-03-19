@@ -3,12 +3,14 @@ package fruits
 import (
 	"database/sql"
 	"fmt"
+	"monolith/config"
+
 	_ "github.com/mattn/go-sqlite3"
 )
 
 func GetFruits() (map[string]string, error) {
 	// Returns a map of user ids to their fruits
-	db, err := sql.Open("sqlite3", "monolith.db")
+	db, err := sql.Open("sqlite3", config.DbFile)
 	if err != nil {
 		return nil, err
 	}

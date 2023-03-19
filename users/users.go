@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"encoding/base64"
 	"fmt"
+	"monolith/config"
 	"time"
 
 	_ "github.com/mattn/go-sqlite3"
@@ -23,7 +24,7 @@ func ensureUsersTable(db *sql.DB) bool {
 
 func IsUserSuper(id int) bool {
 	// Checks if user is super
-	db, err := sql.Open("sqlite3", "monolith.db")
+	db, err := sql.Open("sqlite3", config.DbFile)
 	if err != nil {
 		return false
 	}

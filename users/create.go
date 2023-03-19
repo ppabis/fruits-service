@@ -3,6 +3,8 @@ package users
 import (
 	"database/sql"
 	"fmt"
+	"monolith/config"
+
 	_ "github.com/mattn/go-sqlite3"
 )
 
@@ -18,7 +20,7 @@ func CreateUser(username, password string) error {
 		return fmt.Errorf("failed to hash password")
 	}
 
-	db, err := sql.Open("sqlite3", "monolith.db")
+	db, err := sql.Open("sqlite3", config.DbFile)
 	if err != nil {
 		return err
 	}
