@@ -15,11 +15,9 @@ func ListAllFruits(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	w.Header().Add("Content-Type", "text/html")
 	w.WriteHeader(http.StatusOK)
-	w.Header().Add("Content-Type", "text/plain")
-	for k, v := range fruits {
-		w.Write([]byte(k + ":\t\t\t" + v + "\n"))
-	}
+	printIndexPage(fruits, activateSession(r), w)
 
 }
 
@@ -55,7 +53,7 @@ func SetFruit(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Add("Location", "/")
-	w.WriteHeader(http.StatusOK)
+	w.WriteHeader(http.StatusFound)
 	w.Write([]byte("fruit set"))
 
 }
