@@ -5,25 +5,9 @@ import (
 	"fmt"
 	"monolith/config"
 	"monolith/users"
-	"strings"
 
 	_ "github.com/mattn/go-sqlite3"
 )
-
-func isFruitSpecial(fruit string) bool {
-	// Checks if a fruit is special
-	fruit = strings.ToLower(fruit)
-	return fruit == "pineapple" || fruit == "kiwi"
-}
-
-func hasCurrent(db *sql.DB, id int) (bool, error) {
-	// Checks if a user has a current fruit
-	rows, err := db.Query("SELECT id FROM fruits WHERE user = ?", id)
-	if err != nil {
-		return false, err
-	}
-	return rows.Next(), nil
-}
 
 func UpdateFruit(id int, name string) error {
 	// Updates a fruit
