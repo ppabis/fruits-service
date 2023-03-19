@@ -14,7 +14,7 @@ const TEMPLATE = `<!DOCTYPE html>
 <body>
 <h1>Fruits service</h1>
 {{if .User}}
-<form action="/fruit" method="PUT">
+<form action="/fruit" method="POST">
 	<label for="fruit">Fruit:</label>
 	<select name="fruit" id="fruit">
 		<option value="apple">Apple 🍎</option>

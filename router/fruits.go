@@ -23,10 +23,10 @@ func ListAllFruits(w http.ResponseWriter, r *http.Request) {
 
 func SetFruit(w http.ResponseWriter, r *http.Request) {
 	// Sets a fruit
-	// path = PUT /fruit
-	if r.Method != "PUT" {
+	// path = PUT /fruit, POST /fruit
+	if r.Method != "PUT" && r.Method != "POST" {
 		w.WriteHeader(http.StatusMethodNotAllowed)
-		w.Write([]byte("only PUT is allowed"))
+		w.Write([]byte("only PUT or POST is allowed"))
 		return
 	}
 
