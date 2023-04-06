@@ -11,6 +11,7 @@ func Serve(port int) error {
 	mux.HandleFunc("/fruit", SetFruit)
 	mux.HandleFunc("/login", LoginUser)
 	mux.HandleFunc("/logout", LogoutUser)
+	mux.HandleFunc("/token", GetToken)
 	mux.HandleFunc("/", ListAllFruits)
 	return http.ListenAndServe(":"+strconv.Itoa(port), mux)
 }
