@@ -10,7 +10,18 @@ const TEMPLATE = `<!DOCTYPE html>
 <head>
 <title>Monolith</title>
 <meta charset="utf-8">
-</head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" integrity="sha512-pumBsjNRGGqkPzKHndZMaAG+bir374sORyzM3uulLV14lN5LyykqNk8eEeUlUkB3U0M4FApyaHraT65ihJhDpQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script type="text/javascript">
+	$(()=>{
+		$("#get-token").click(()=>{
+			$(".token-info").remove();
+			$.get("/token", (data)=>{
+				localStorage.setItem("token", data);
+				$("#get-token").after("<span class=\"token-info\">Token in local storage</span>");
+			});
+		});
+	});
+</script>
 <body>
 <h1>Fruits service</h1>
 {{if .User}}
@@ -29,6 +40,7 @@ const TEMPLATE = `<!DOCTYPE html>
 <form action="/logout" method="GET">
 	<input type="submit" value="🚪 Logout">
 </form>
+<button id="get-token">🎟️ Token</button>
 {{else}}
 <form action="/login" method="POST">
 	<label for="username">🐱 Username:</label>
