@@ -1,7 +1,5 @@
 package token
 
-import (
-	"crypto/ecdsa"
-)
+import "crypto/ecdsa"
 
 var PrivateKey *ecdsa.PrivateKey = nil
