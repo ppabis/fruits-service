@@ -9,6 +9,7 @@ import (
 )
 
 var DbFile = "monolith.db"
+var RedisEndpoint = "localhost:6379"
 
 func init() {
 	var err error = nil
@@ -16,6 +17,11 @@ func init() {
 	dbFile := os.Getenv("USE_DB_FILE")
 	if dbFile != "" {
 		DbFile = dbFile
+	}
+
+	redisEndpoint := os.Getenv("USE_REDIS_ENDPOINT")
+	if redisEndpoint != "" {
+		RedisEndpoint = redisEndpoint
 	}
 
 	privateKey := []byte(os.Getenv("PRIVATE_KEY"))
