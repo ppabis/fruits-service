@@ -54,3 +54,25 @@ func GetByCookie(cookie string) (int, error) {
 	}
 	return 0, fmt.Errorf("invalid cookie")
 }
+
+func GetUsername(db *sql.DB, id int) (string, error) {
+	rows, err := db.Query("SELECT username FROM users WHERE id = ?", id)
+
+	if err != nil {
+		return "", err
+	}
+	defer rows.Close()
+
+	if !rows.Next() {
+		return "", fmt.Errorf("couldn't find user %d", id)
+	}
+
+	var username string
+	err = rows.Scan(&username)
+
+	if err != nil {
+		return "", err
+	}
+
+	return username, nil
+}
