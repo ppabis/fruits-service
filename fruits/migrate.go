@@ -22,9 +22,7 @@ func MigrateSQLiteToRedis() {
 	}
 
 	client := redis.NewClient(&redis.Options{
-		Addr:     config.RedisEndpoint,
-		Password: "",
-		DB:       0,
+		Addr: config.RedisEndpoint,
 	})
 
 	ctx := context.TODO()
