@@ -1,0 +1,5 @@
+{
+    "go.testEnvVars": {
+        "PRIVATE_KEY_FILE": "${workspaceFolder}/server.pem",
+    }
+}
