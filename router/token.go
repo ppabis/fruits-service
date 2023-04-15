@@ -23,8 +23,16 @@ func GetToken(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	username, err := users.GetUsername(nil, id)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(err.Error()))
+		return
+	}
+
 	extras := map[string]interface{}{
-		"super": users.IsUserSuper(id),
+		"super":    users.IsUserSuper(id),
+		"username": username,
 	}
 
 	token, err := token.CreateToken(id, "fruits", extras)

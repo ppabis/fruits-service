@@ -56,6 +56,14 @@ func GetByCookie(cookie string) (int, error) {
 }
 
 func GetUsername(db *sql.DB, id int) (string, error) {
+	var err error
+	if db == nil {
+		db, err = sql.Open("sqlite3", config.DbFile)
+		if err != nil {
+			return "", err
+		}
+		defer db.Close()
+	}
 	rows, err := db.Query("SELECT username FROM users WHERE id = ?", id)
 
 	if err != nil {
