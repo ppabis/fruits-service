@@ -1,15 +1,18 @@
 package config
 
 import (
+	"crypto/ecdsa"
 	"fmt"
-	"monolith/token"
 	"os"
+	"time"
 
 	"github.com/golang-jwt/jwt/v5"
 )
 
 var DbFile = "monolith.db"
 var RedisEndpoint = "localhost:6379"
+var TokenLifetime = 30 * time.Second
+var PrivateKey *ecdsa.PrivateKey
 
 func init() {
 	var err error = nil
@@ -36,7 +39,7 @@ func init() {
 		}
 	}
 
-	token.PrivateKey, err = jwt.ParseECPrivateKeyFromPEM(privateKey)
+	PrivateKey, err = jwt.ParseECPrivateKeyFromPEM(privateKey)
 	if err != nil {
 		panic(fmt.Errorf("could not parse private key: %w", err))
 	}

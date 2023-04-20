@@ -2,6 +2,8 @@ package fruits
 
 import (
 	"database/sql"
+	"monolith/token"
+	"monolith/users"
 	"strings"
 )
 
@@ -25,4 +27,13 @@ func hasCurrent(db *sql.DB, id int) (bool, error) {
 	}
 	defer rows.Close()
 	return rows.Next(), nil
+}
+
+func CreateTokenForFruits(user int, username string, super bool) (string, error) {
+	extras := map[string]interface{}{
+		"super":    users.IsUserSuper(user),
+		"username": username,
+	}
+
+	return token.CreateToken(user, "fruits", extras)
 }

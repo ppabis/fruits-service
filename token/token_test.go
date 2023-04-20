@@ -4,13 +4,15 @@ import (
 	"crypto/ecdsa"
 	"crypto/elliptic"
 	"crypto/rand"
+	"monolith/config"
 	"testing"
 
 	"github.com/golang-jwt/jwt/v5"
 )
 
 func TestTokenCreate(t *testing.T) {
-	PrivateKey, _ = ecdsa.GenerateKey(elliptic.P521(), rand.Reader)
+	var privateKey, _ = ecdsa.GenerateKey(elliptic.P521(), rand.Reader)
+	config.PrivateKey = privateKey
 	// Creates a new token
 	tokenString, err := CreateToken(123, "fruits", map[string]interface{}{"super": true})
 	if err != nil {
@@ -48,7 +50,7 @@ func TestTokenCreate(t *testing.T) {
 	}
 
 	_, err = jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-		return &PrivateKey.PublicKey, nil
+		return &privateKey.PublicKey, nil
 	}, jwt.WithValidMethods([]string{jwt.SigningMethodES512.Name}))
 
 	if err != nil {

@@ -1,7 +1,7 @@
 package router
 
 import (
-	"monolith/token"
+	"monolith/fruits"
 	"monolith/users"
 	"net/http"
 )
@@ -30,12 +30,7 @@ func GetToken(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	extras := map[string]interface{}{
-		"super":    users.IsUserSuper(id),
-		"username": username,
-	}
-
-	token, err := token.CreateToken(id, "fruits", extras)
+	token, err := fruits.CreateTokenForFruits(id, username, users.IsUserSuper(id))
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte(err.Error()))

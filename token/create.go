@@ -2,6 +2,7 @@ package token
 
 import (
 	"fmt"
+	"monolith/config"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -24,8 +25,8 @@ func CreateToken(user int, service string, params map[string]interface{}) (strin
 	// Overwrite arguments that are standard
 	claims["sub"] = fmt.Sprintf("user:%d", user)
 	claims["aud"] = fmt.Sprintf("service:%s", service)
-	claims["exp"] = time.Now().Add(time.Second * 30).Unix()
+	claims["exp"] = time.Now().Add(config.TokenLifetime).Unix()
 
 	token := jwt.NewWithClaims(jwt.SigningMethodES512, claims)
-	return token.SignedString(PrivateKey)
+	return token.SignedString(config.PrivateKey)
 }
