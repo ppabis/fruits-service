@@ -4,6 +4,7 @@ import (
 	"crypto/ecdsa"
 	"fmt"
 	"os"
+	"strconv"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -13,6 +14,7 @@ var DbFile = "monolith.db"
 var RedisEndpoint = "localhost:6379"
 var TokenLifetime = 30 * time.Second
 var PrivateKey *ecdsa.PrivateKey
+var FruitsEndpoint = "http://localhost:8081"
 
 func init() {
 	var err error = nil
@@ -42,6 +44,20 @@ func init() {
 	PrivateKey, err = jwt.ParseECPrivateKeyFromPEM(privateKey)
 	if err != nil {
 		panic(fmt.Errorf("could not parse private key: %w", err))
+	}
+
+	tokenLifetime := os.Getenv("TOKEN_LIFETIME")
+	if tokenLifetime != "" {
+		if t, err := strconv.Atoi(tokenLifetime); err != nil && t > 0 {
+			TokenLifetime = time.Duration(t) * time.Second
+		} else {
+			panic(fmt.Errorf("could not parse token lifetime: %w", err))
+		}
+	}
+
+	fruitsEndpoint := os.Getenv("FRUITS_ENDPOINT")
+	if fruitsEndpoint != "" {
+		FruitsEndpoint = fruitsEndpoint
 	}
 
 }
