@@ -70,7 +70,7 @@ func sendToFruitsMicroservice(id int, username string, fruit string, super bool)
 		return err
 	}
 
-	req, err := http.NewRequest("PUT", config.FruitsEndpoint, nil)
+	req, err := http.NewRequest("PUT", config.FruitsEndpoint+"/fruit", nil)
 	if err != nil {
 		return err
 	}
