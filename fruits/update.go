@@ -79,8 +79,8 @@ func sendToFruitsMicroservice(id int, username string, fruit string, super bool)
 		return err
 	}
 
-	form := url.Values{"fruit": []string{fruit}}
-	req, err := http.NewRequest("PUT", config.FruitsEndpoint+"/fruit", strings.NewReader(form.Encode()))
+	form := url.Values{"fruit": []string{fruit}}.Encode()
+	req, err := http.NewRequest("PUT", config.FruitsEndpoint+"/fruit", strings.NewReader(form))
 	if err != nil {
 		log.Default().Printf("failed to create request for fruits microservice: %v\n", err)
 		return err
@@ -88,7 +88,7 @@ func sendToFruitsMicroservice(id int, username string, fruit string, super bool)
 
 	req.Header.Add("X-Auth-Token", token)
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-	req.Header.Set("Content-Length", strconv.Itoa(len(form.Encode())))
+	req.Header.Set("Content-Length", strconv.Itoa(len(form)))
 
 	resp, err := client.Do(req)
 	if err != nil {
