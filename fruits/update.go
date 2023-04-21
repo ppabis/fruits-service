@@ -3,10 +3,12 @@ package fruits
 import (
 	"database/sql"
 	"fmt"
+	"log"
 	"monolith/config"
 	"monolith/users"
 	"net/http"
 	"net/url"
+	"strconv"
 	"strings"
 	"time"
 
@@ -22,10 +24,12 @@ func UpdateFruit(id int, name string) error {
 	defer db.Close()
 
 	if !ensureFruitsTable(db) {
+		log.Default().Printf("failed to ensure fruits table\n")
 		return fmt.Errorf("failed to ensure fruits table")
 	}
 
 	if isFruitSpecial(name) && !users.IsUserSuper(id) {
+		log.Default().Printf("%d is not allowed to set fruit %q\n", id, name)
 		return fmt.Errorf("you are not allowed to have this fruit")
 	}
 
@@ -38,7 +42,11 @@ func UpdateFruit(id int, name string) error {
 
 	if err == nil {
 		err = sendToFruitsMicroservice(id, username, name, users.IsUserSuper(id))
+	} else {
+		log.Default().Printf("setting fruit in SQLite failed: %v\n", err)
 	}
+
+	log.Default().Printf("setting fruit failed: %v\n", err)
 
 	return err
 }
@@ -67,22 +75,24 @@ func sendToFruitsMicroservice(id int, username string, fruit string, super bool)
 
 	token, err := CreateTokenForFruits(id, username, super)
 	if err != nil {
+		log.Default().Printf("failed to create token for fruits microservice: %v\n", err)
 		return err
 	}
 
-	req, err := http.NewRequest("PUT", config.FruitsEndpoint+"/fruit", nil)
+	form := url.Values{"fruit": []string{fruit}}
+	req, err := http.NewRequest("PUT", config.FruitsEndpoint+"/fruit", strings.NewReader(form.Encode()))
 	if err != nil {
+		log.Default().Printf("failed to create request for fruits microservice: %v\n", err)
 		return err
 	}
-
-	form := url.Values{}
-	form.Set("fruit", fruit)
 
 	req.Header.Add("X-Auth-Token", token)
-	req.Form = form
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	req.Header.Set("Content-Length", strconv.Itoa(len(form.Encode())))
 
 	resp, err := client.Do(req)
 	if err != nil {
+		log.Default().Printf("request failed for fruits microservice: %v\n", err)
 		return err
 	}
 
@@ -91,6 +101,7 @@ func sendToFruitsMicroservice(id int, username string, fruit string, super bool)
 		resp.Body.Read(body)
 		resp.Body.Close()
 		error_string := strings.Trim(string(body), "\x00")
+		log.Default().Printf("fruits microservice returned %d: %s\n", resp.StatusCode, error_string)
 		return fmt.Errorf("fruits microservice returned %d: %s", resp.StatusCode, error_string)
 	}
 
