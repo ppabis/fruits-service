@@ -46,7 +46,11 @@ func UpdateFruit(id int, name string) error {
 		log.Default().Printf("setting fruit in SQLite failed: %v\n", err)
 	}
 
-	log.Default().Printf("setting fruit failed: %v\n", err)
+	if err != nil {
+		log.Default().Printf("setting fruit failed: %v\n", err)
+	} else {
+		log.Default().Printf("setting fruit succeeded %d %q\n", id, name)
+	}
 
 	return err
 }

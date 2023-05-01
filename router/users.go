@@ -1,6 +1,7 @@
 package router
 
 import (
+	"log"
 	"monolith/users"
 	"net/http"
 )
@@ -13,18 +14,21 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "POST" {
 		w.WriteHeader(http.StatusMethodNotAllowed)
 		w.Write([]byte("only POST is allowed"))
+		log.Default().Println("only POST is allowed")
 		return
 	}
 
 	if id != 0 {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write([]byte("already logged in"))
+		log.Default().Println("already logged in")
 		return
 	}
 
 	if r.ParseForm() != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write([]byte("invalid form"))
+		log.Default().Println("invalid form")
 		return
 	}
 
@@ -36,6 +40,7 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		w.WriteHeader(http.StatusUnauthorized)
 		w.Write([]byte(err.Error()))
+		log.Default().Println(err.Error())
 		return
 	}
 
@@ -46,6 +51,7 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("Location", "/")
 	w.WriteHeader(http.StatusFound)
 	w.Write([]byte("logged in"))
+	log.Default().Printf("logged in %q\n", username)
 
 }
 
