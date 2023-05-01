@@ -12,13 +12,13 @@ func ListAllFruits(w http.ResponseWriter, r *http.Request) {
 	var fruits_map map[string]string
 	var err error
 
-	if r.Header.Get("X-Prefer-Data") == "microservice" {
+	if r.Header.Get("X-Prefer-Data") == "monolith" {
+		w.Header().Set("X-Data-Source", "monolith")
+		fruits_map, err = fruits.GetFruits()
+	} else {
 		// Call the microservice
 		fruits_map, err = fruits.GetFruitsFromMicroservice()
 		w.Header().Set("X-Data-Source", "microservice")
-	} else {
-		fruits_map, err = fruits.GetFruits()
-		w.Header().Set("X-Data-Source", "monolith")
 	}
 
 	if err != nil {

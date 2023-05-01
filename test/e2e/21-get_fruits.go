@@ -2,6 +2,7 @@ package e2e
 
 import (
 	"fmt"
+	"net/http"
 
 	"github.com/andybalholm/cascadia"
 	"golang.org/x/net/html"
@@ -10,7 +11,13 @@ import (
 // Gets all the fruits from the current monolith
 // And compares it to the expected result
 func GetFruits(url string) error {
-	resp, err := httpClient.Get(url)
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		return err
+	}
+	req.Header.Set("X-Prefer-Data", "monolith")
+
+	resp, err := httpClient.Do(req)
 	if err != nil {
 		return err
 	}

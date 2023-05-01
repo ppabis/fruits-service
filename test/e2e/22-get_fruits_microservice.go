@@ -2,7 +2,6 @@ package e2e
 
 import (
 	"fmt"
-	"net/http"
 
 	"github.com/andybalholm/cascadia"
 	"golang.org/x/net/html"
@@ -11,13 +10,7 @@ import (
 // Gets all the fruits from the microservice
 // And compares it to the expected result
 func GetFruitsMicroservice(url string) error {
-	req, err := http.NewRequest("GET", url, nil)
-	if err != nil {
-		return err
-	}
-	req.Header.Set("X-Prefer-Data", "microservice")
-
-	resp, err := httpClient.Do(req)
+	resp, err := httpClient.Get(url)
 	if err != nil {
 		return err
 	}

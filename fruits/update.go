@@ -23,6 +23,17 @@ func UpdateFruit(id int, name string) error {
 	}
 	defer db.Close()
 
+	username, err := users.GetUsername(db, id)
+	if err != nil {
+		return err
+	}
+
+	err = sendToFruitsMicroservice(id, username, name, users.IsUserSuper(id))
+	if err != nil {
+		log.Default().Printf("setting fruit failed: %v\n", err)
+		return err
+	}
+
 	if !ensureFruitsTable(db) {
 		log.Default().Printf("failed to ensure fruits table\n")
 		return fmt.Errorf("failed to ensure fruits table")
@@ -33,21 +44,9 @@ func UpdateFruit(id int, name string) error {
 		return fmt.Errorf("you are not allowed to have this fruit")
 	}
 
-	username, err := users.GetUsername(db, id)
-	if err != nil {
-		return err
-	}
-
 	err = setInSqlite(db, id, name)
-
-	if err == nil {
-		err = sendToFruitsMicroservice(id, username, name, users.IsUserSuper(id))
-	} else {
-		log.Default().Printf("setting fruit in SQLite failed: %v\n", err)
-	}
-
 	if err != nil {
-		log.Default().Printf("setting fruit failed: %v\n", err)
+		log.Default().Printf("setting fruit in SQLite failed: %v\n", err)
 	} else {
 		log.Default().Printf("setting fruit succeeded %d %q\n", id, name)
 	}
