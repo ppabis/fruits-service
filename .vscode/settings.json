@@ -1,5 +1,7 @@
 {
     "go.testEnvVars": {
         "PRIVATE_KEY_FILE": "${workspaceFolder}/server.pem",
+        "PUBLIC_KEY_FILE": "${workspaceFolder}/server.pem.pub",
+        "USE_DB_FILE": "${workspaceFolder}/.test.db"
     }
 }
