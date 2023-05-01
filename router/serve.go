@@ -1,9 +1,12 @@
 package router
 
 import (
+	"context"
 	"net/http"
 	"strconv"
 )
+
+var server *http.Server
 
 func Serve(port int) error {
 	// Serve the web app
@@ -13,5 +16,15 @@ func Serve(port int) error {
 	mux.HandleFunc("/logout", LogoutUser)
 	mux.HandleFunc("/token", GetToken)
 	mux.HandleFunc("/", ListAllFruits)
-	return http.ListenAndServe(":"+strconv.Itoa(port), mux)
+	server = &http.Server{
+		Addr:    ":" + strconv.Itoa(port),
+		Handler: mux,
+	}
+	return server.ListenAndServe()
+}
+
+func Shutdown() {
+	if server != nil {
+		server.Shutdown(context.TODO())
+	}
 }
