@@ -6,9 +6,21 @@ import (
 )
 
 func ListAllFruits(w http.ResponseWriter, r *http.Request) {
-	// Lists all fruits
+	// Lists all fruits_map
 	// path = GET /
-	fruits, err := fruits.GetFruits()
+	// Select the source based on `X-Prefer-Data`
+	var fruits_map map[string]string
+	var err error
+
+	if r.Header.Get("X-Prefer-Data") == "microservice" {
+		// Call the microservice
+		fruits_map, err = fruits.GetFruitsFromMicroservice()
+		w.Header().Set("X-Data-Source", "microservice")
+	} else {
+		fruits_map, err = fruits.GetFruits()
+		w.Header().Set("X-Data-Source", "monolith")
+	}
+
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte(err.Error()))
@@ -17,7 +29,7 @@ func ListAllFruits(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Add("Content-Type", "text/html")
 	w.WriteHeader(http.StatusOK)
-	printIndexPage(fruits, activateSession(r), w)
+	printIndexPage(fruits_map, activateSession(r), w)
 
 }
 
