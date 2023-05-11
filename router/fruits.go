@@ -6,31 +6,12 @@ import (
 )
 
 func ListAllFruits(w http.ResponseWriter, r *http.Request) {
-	// Lists all fruits_map
+	// Just serve index page with JS
 	// path = GET /
 	// Select the source based on `X-Prefer-Data`
-	var fruits_map map[string]string
-	var err error
-
-	if r.Header.Get("X-Prefer-Data") == "monolith" {
-		w.Header().Set("X-Data-Source", "monolith")
-		fruits_map, err = fruits.GetFruits()
-	} else {
-		// Call the microservice
-		fruits_map, err = fruits.GetFruitsFromMicroservice()
-		w.Header().Set("X-Data-Source", "microservice")
-	}
-
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte(err.Error()))
-		return
-	}
-
 	w.Header().Add("Content-Type", "text/html")
 	w.WriteHeader(http.StatusOK)
-	printIndexPage(fruits_map, activateSession(r), w)
-
+	printIndexPage(activateSession(r), w)
 }
 
 func SetFruit(w http.ResponseWriter, r *http.Request) {
