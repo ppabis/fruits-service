@@ -12,7 +12,7 @@ import (
 
 var DbFile = "monolith.db"
 var RedisEndpoint = "localhost:6379"
-var TokenLifetime = 30 * time.Second
+var TokenLifetime = 15 * time.Second
 var PrivateKey *ecdsa.PrivateKey
 var FruitsEndpoint = "http://localhost:8081"
 
