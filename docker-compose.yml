@@ -1,0 +1,28 @@
+version: '2'
+
+networks:
+  default:
+    external:
+      name: fruits-network
+
+services:
+  redis:
+    image: redis:latest
+    volumes:
+      - ./redis-data:/data
+    command: redis-server --appendonly yes
+
+  fruits:
+    image: fruits-microservice:latest
+    ports:
+      - 8081:8081
+    depends_on:
+      - redis
+    environment:
+      - REDIS_ENDPOINT=redis:6379
+      - PUBLIC_KEY_FILE=/run/secrets/public_key
+    volumes:
+      - type: bind
+        source: ./server.pem.pub
+        target: /run/secrets/public_key
+        read_only: true
