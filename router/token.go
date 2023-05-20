@@ -9,6 +9,7 @@ import (
 // Gets a token
 // path = GET /token
 func GetToken(w http.ResponseWriter, r *http.Request) {
+	GetTokenAccesses.Inc()
 	if r.Method != "GET" {
 		w.WriteHeader(http.StatusMethodNotAllowed)
 		w.Write([]byte("only GET is allowed"))

@@ -9,6 +9,7 @@ import (
 func LoginUser(w http.ResponseWriter, r *http.Request) {
 	// Logs in a user
 	// Path = POST /login
+	LoginUserAccesses.Inc()
 	id := activateSession(r)
 
 	if r.Method != "POST" {
@@ -58,6 +59,7 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 func LogoutUser(w http.ResponseWriter, r *http.Request) {
 	// Logs out a user
 	// Path = GET /logout
+	LogoutUserAccesses.Inc()
 	if r.Method != "GET" {
 		w.WriteHeader(http.StatusMethodNotAllowed)
 		w.Write([]byte("only GET is allowed"))
