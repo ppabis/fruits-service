@@ -145,7 +145,7 @@ func printIndexPage(user int, w http.ResponseWriter) error {
 		FruitsEndpoint string
 		User           bool
 	}{
-		config.FruitsEndpoint,
+		config.FruitsEndpointExternal,
 		user > 0,
 	})
 }
