@@ -6,6 +6,27 @@ networks:
       name: fruits-network
 
 services:
+  monolith:
+    build: .
+    ports:
+      - 8080:8080
+    depends_on:
+      - fruits
+    environment:
+      - FRUITS_ENDPOINT=http://fruits:8081
+      - PRIVATE_KEY_FILE=/run/secrets/private_key
+      - USE_DB_FILE=/run/database.db
+    volumes:
+      - type: bind
+        source: ./server.pem
+        target: /run/secrets/private_key
+        read_only: true
+      - type: bind
+        source: ./monolith.db
+        target: /run/database.db
+        read_only: false
+
+
   redis:
     image: redis:latest
     volumes:
@@ -26,3 +47,15 @@ services:
         source: ./server.pem.pub
         target: /run/secrets/public_key
         read_only: true
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - 3030:3000
+  
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - 9090:9090
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
