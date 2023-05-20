@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"encoding/base64"
 	"fmt"
+	"log"
 	"monolith/config"
 	"time"
 
@@ -19,6 +20,9 @@ func newCookie(username string) string {
 
 func ensureUsersTable(db *sql.DB) bool {
 	_, err := db.Exec("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, password TEXT, super INTEGER DEFAULT 0)")
+	if err != nil {
+		log.Default().Printf("Error: %v", err)
+	}
 	return err == nil
 }
 
