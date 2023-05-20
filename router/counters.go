@@ -1,8 +1,11 @@
 package router
 
 import (
+	"net/http"
+
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 var SetFruitAccesses = promauto.NewCounter(prometheus.CounterOpts{
@@ -29,3 +32,13 @@ var LogoutUserAccesses = promauto.NewCounter(prometheus.CounterOpts{
 	Name: "logout_user_accesses_total",
 	Help: "The total number of times user logged out",
 })
+
+func PresentMetrics(w http.ResponseWriter, r *http.Request) {
+	if r.Header.Get("Authorization") == "Basic Ok15U3VwZXJTZWNyZXRDb2Rl" {
+		promhttp.Handler().ServeHTTP(w, r)
+	} else {
+		w.Header().Set("WWW-Authenticate", "Basic realm=\"metrics\"")
+		w.WriteHeader(http.StatusUnauthorized)
+		w.Write([]byte("forbidden"))
+	}
+}
