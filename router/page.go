@@ -87,16 +87,10 @@ async function setFruit() {
 				fruit: fruit,
 			},
 		})
-		
-		.done((data) => {
-			$("#set-fruit").prop("disabled", false);
-			getFruits();
-		})
-		
-		.fail((xhr, status, error) => {
-			alert("Error setting fruit: " + error);
-			$("#set-fruit").prop("disabled", false);
-		});
+		.done( () => getFruits() )
+		.fail( (x, s, e) => alert("Error setting fruit [" + x.status + "]: " + e) )
+		.always( () => $("#set-fruit").prop("disabled", false) );
+
 	} catch(error) {
 		alert("Error setting fruit: " + error);
 		$("#set-fruit").prop("disabled", false);
